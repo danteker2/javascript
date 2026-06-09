@@ -89,7 +89,6 @@ function camelize(str) {
  * @param {number} n - количество чисел Фибоначчи
  * @returns {Array<bigint>} массив чисел Фибоначчи
  */
-import { fib } from '../lab2/lab2.js';
 function fibs(n) {
   const result = [];
   for (let i = 0; i < n; i++) {
