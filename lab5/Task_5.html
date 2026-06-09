@@ -28,6 +28,11 @@
 		  position: relative;
 		}
 
+		.pane.hidden h3,
+		.pane.hidden p {
+		  display: none;
+		}
+
 		.remove-button {
 		  position: absolute;
 		  font-size: 110%;
@@ -47,7 +52,7 @@
 	<div id="messages-container">
 	    <div class="pane">
 	      <h3>Лошадь</h3>
-	      <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошасти, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
+	      <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошади, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
 	      <button class="remove-button">[x]</button>
 	    </div>
 	    <div class="pane">
@@ -65,21 +70,20 @@
 	</div>
 
 	<script>
-		'use strict';
 		/*
-		 * Переключает видимость родительского элемента сообщения и текст кнопки
+		 * Переключает видимость содержимого блока и текст кнопки
 		 * @param {Event} event - Событие клика
 		 * @returns {void}
 		 */
 		function removeMessage(event) {
 			const pane = event.target.closest('.pane');
-			if (pane) {
-				const button = event.target.closest('.remove-button');
-				if (pane.style.display === 'none') {
-					pane.style.display = '';
+			const button = event.target.closest('.remove-button');
+			if (pane && button) {
+				if (pane.classList.contains('hidden')) {
+					pane.classList.remove('hidden');
 					button.textContent = '[x]';
 				} else {
-					pane.style.display = 'none';
+					pane.classList.add('hidden');
 					button.textContent = '[+]';
 				}
 			}
