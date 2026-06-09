@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Редактируемая таблица</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    td {
+      border: 1px solid #888;
+      padding: 10px;
+      vertical-align: top;
+      cursor: pointer;
+      min-width: 120px;
+      min-height: 40px;
+    }
+
+    td:hover:not(.editing) {
+      background: #f0f8ff;
+    }
+
+    td.editing {
+      background: #fff8dc;
+      cursor: default;
+    }
+
+    td textarea {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 80px;
+      resize: none;          /* отключаем изменение размера мышью */
+      font-family: monospace;
+      font-size: 14px;
+      padding: 6px;
+    }
+
+    .editor-controls {
+      margin-top: 6px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .editor-controls button {
+      padding: 4px 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Таблица с редактируемыми ячейками</h2>
+  <p>Кликните по ячейке, чтобы отредактировать её HTML-содержимое.</p>
+
+  <table id="editable-table">
+    <tbody>
+      <tr>
+        <td>Первая ячейка</td>
+        <td>Вторая <b>жирная</b> ячейка</td>
+        <td>Третья ячейка</td>
+      </tr>
+      <tr>
+        <td>Ячейка с <i>курсивом</i></td>
+        <td>Ещё одна ячейка</td>
+        <td><a href="https://ru.wikipedia.org/wiki/Ананас?ysclid=mq65l6sui025398084">Ссылка</a> внутри</td>
+      </tr>
+      <tr>
+        <td>Нижний <span style="color:red">левый</span></td>
+        <td>Нижний центр</td>
+        <td>Нижний правый</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    'use strict';
+
+    /** Ключ в sessionStorage, под которым хранится состояние таблицы. */
+    const STORAGE_KEY = 'editable-table-state';
+
+    /** Ссылка на таблицу. */
+    const table = document.getElementById('editable-table');
+
+    /**
+     * Ссылка на ячейку, которая сейчас находится в режиме редактирования.
+     * Если null — редактирование не активно.
+     * @type {HTMLTableCellElement|null}
+     */
+    let currentEditingCell = null;
+
+    /**
+     * Исходное содержимое ячейки до начала редактирования.
+     * Используется для восстановления при отмене.
+     * @type {string|null}
+     */
+    let originalContent = null;
+
+    /**
+     * Сохраняет текущее содержимое всех ячеек таблицы в sessionStorage.
+     * Состояние хранится как массив строк (innerHTML каждой <td>).
+     */
+    function saveToStorage() {
+      const cells = table.querySelectorAll('td');
+      const data = Array.from(cells).map(td => td.innerHTML);
+      try {
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.warn('Не удалось сохранить в sessionStorage:', e);
+      }
+    }
+
+    /**
+     * Восстанавливает содержимое ячеек из sessionStorage.
+     * Если данных нет или они некорректны — ничего не делает.
+     */
+    function loadFromStorage() {
+      try {
+        const raw = sessionStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (!Array.isArray(data)) return;
+
+        const cells = table.querySelectorAll('td');
+        cells.forEach((td, i) => {
+          if (typeof data[i] === 'string') td.innerHTML = data[i];
+        });
+      } catch (e) {
+        console.warn('Не удалось прочитать sessionStorage:', e);
+      }
+    }
+
+    /**
+     * Создаёт DOM-элемент кнопки.
+     * @param {string} text      — текст на кнопке.
+     * @param {Function} handler — обработчик клика.
+     * @returns {HTMLButtonElement}
+     */
+    function makeButton(text, handler) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = text;
+      btn.addEventListener('click', handler);
+      return btn;
+    }
+
+    /**
+     * Завершает редактирование текущей ячейки, сохраняя изменения.
+     * Берёт содержимое из <textarea> и записывает его обратно в <td>.
+     */
+    function commitEdit() {
+      if (!currentEditingCell) return;
+      const textarea = currentEditingCell.querySelector('textarea');
+      if (textarea) {
+        currentEditingCell.innerHTML = textarea.value;
+      }
+      finishEditing(true);
+    }
+
+    /**
+     * Отменяет редактирование текущей ячейки,
+     * восстанавливая её исходное содержимое.
+     */
+    function cancelEdit() {
+      if (!currentEditingCell) return;
+      currentEditingCell.innerHTML = originalContent;
+      finishEditing(false);
+    }
+
+    /**
+     * Завершает режим редактирования: снимает класс, очищает ссылки,
+     * при необходимости сохраняет состояние в sessionStorage.
+     * @param {boolean} shouldSave — нужно ли сохранять в sessionStorage.
+     */
+    function finishEditing(shouldSave) {
+      if (currentEditingCell) {
+        currentEditingCell.classList.remove('editing');
+      }
+      currentEditingCell = null;
+      originalContent = null;
+      if (shouldSave) saveToStorage();
+    }
+
+    /**
+     * Переводит ячейку в режим редактирования:
+     * заменяет её содержимое на <textarea> с текущим HTML и кнопки OK/ОТМЕНА.
+     * @param {HTMLTableCellElement} td — редактируемая ячейка.
+     */
+    function startEditing(td) {
+      if (currentEditingCell) return; // уже идёт редактирование другой ячейки
+
+      currentEditingCell = td;
+      originalContent = td.innerHTML;
+      td.classList.add('editing');
+
+      const textarea = document.createElement('textarea');
+      textarea.value = originalContent;
+
+      const controls = document.createElement('div');
+      controls.className = 'editor-controls';
+      controls.appendChild(makeButton('OK', commitEdit));
+      controls.appendChild(makeButton('ОТМЕНА', cancelEdit));
+
+      // Очищаем ячейку и кладём в неё редактор.
+      td.innerHTML = '';
+      td.appendChild(textarea);
+      td.appendChild(controls);
+
+      textarea.focus();
+    }
+
+    /**
+     * Обработчик клика по таблице (делегирование).
+     * Игнорирует клики внутри уже редактируемой ячейки,
+     * иначе запускает редактирование целевой <td>.
+     * @param {MouseEvent} event
+     */
+    function onTableClick(event) {
+      const td = event.target.closest('td');
+      if (!td) return;
+      if (!table.contains(td)) return;
+
+      // Если уже редактируем ячейку — игнорируем все клики по другим ячейкам.
+      if (currentEditingCell) return;
+
+      startEditing(td);
+    }
+
+    /**
+     * Инициализация страницы:
+     * восстанавливает данные из sessionStorage и вешает делегированный обработчик.
+     */
+    function init() {
+      loadFromStorage();
+      table.addEventListener('click', onTableClick);
+    }
+
+    init();
+  </script>
+</body>
+</html>

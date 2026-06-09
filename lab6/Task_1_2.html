@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа №6 - Задание 1</title>
+    <style>
+        .input-wrapper {
+            position: relative;
+            margin: 20px 0;
+            width: 300px;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 10px 5px 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .placeholder {
+            position: absolute;
+            left: 5px;
+            top: 10px;
+            color: blue;
+            pointer-events: none;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        .placeholder.hint {
+            top: -15px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Работа с элементом select</h1>
+    
+    <select id="musicSelect">
+        <option value="Rock">Рок</option>
+        <option value="Blues" selected>Блюз</option>
+    </select>
+    
+    <div id="output"></div>
+    
+    <button id="addOption">Добавить опцию Classic</button>
+    <button id="selectClassic">Выбрать Classic</button>
+
+    <h2>Плейсхолдер-подсказка</h2>
+    <div class="input-wrapper">
+        <input type="text" id="myInput" data-placeholder="Введите текст">
+        <span class="placeholder">Введите текст</span>
+    </div>
+
+    <script>
+	'use strict';
+        /**
+         * Выводит информацию о выбранной опции
+         * @param {HTMLSelectElement} selectElement - Элемент select
+         * @returns {void}
+         */
+        function displaySelectedOption(selectElement) {
+            const output = document.getElementById('output');
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            
+            output.innerHTML = `
+                <p><strong>Значение (value):</strong> ${selectedOption.value}</p>
+                <p><strong>Текст (text):</strong> ${selectedOption.text}</p>
+            `;
+        }
+
+        /**
+         * Добавляет новую опцию в select
+         * @param {HTMLSelectElement} selectElement - Элемент select
+         * @param {string} value - Значение опции
+         * @param {string} text - Текст опции
+         * @returns {HTMLOptionElement} Созданная опция
+         */
+        function addOption(selectElement, value, text) {
+            const newOption = new Option(text, value);
+            selectElement.add(newOption);
+            return newOption;
+        }
+
+        /**
+         * Преобразует плейсхолдер в подсказку (перемещает над полем)
+         * @param {HTMLElement} placeholder - Элемент плейсхолдера
+         * @returns {void}
+         */
+        function showAsHint(placeholder) {
+            placeholder.classList.add('hint');
+        }
+
+        /**
+         * Возвращает подсказку обратно в плейсхолдер
+         * @param {HTMLElement} placeholder - Элемент плейсхолдера
+         * @returns {void}
+         */
+        function hideHint(placeholder) {
+            placeholder.classList.remove('hint');
+        }
+
+        /**
+         * Инициализирует плейсхолдер для input на основе data-placeholder
+         * @param {HTMLInputElement} input - Элемент input
+         * @returns {void}
+         */
+        function initPlaceholder(input) {
+            const placeholderText = input.dataset.placeholder;
+            const placeholder = input.parentElement.querySelector('.placeholder');
+            
+            if (!placeholder || !placeholderText) return;
+            
+            // Устанавливаем текст плейсхолдера из data-атрибута
+            placeholder.textContent = placeholderText;
+            
+            // При фокусе показываем подсказку над полем
+            input.addEventListener('focus', function() {
+                showAsHint(placeholder);
+            });
+            
+            // При снятии фокуса - если поле пустое, возвращаем плейсхолдер
+            input.addEventListener('blur', function() {
+                if (input.value.trim() === '') {
+                    hideHint(placeholder);
+                }
+            });
+        }
+
+        /**
+         * Инициализация обработчиков событий
+         * @returns {void}
+         */
+        function init() {
+            const musicSelect = document.getElementById('musicSelect');
+            
+            // Отображаем текущую выбранную опцию при загрузке
+            displaySelectedOption(musicSelect);
+            
+            // Обработчик изменения select
+            musicSelect.addEventListener('change', function() {
+                displaySelectedOption(this);
+            });
+            
+            // Обработчик кнопки добавления опции
+            document.getElementById('addOption').addEventListener('click', function() {
+                const existingOption = Array.from(musicSelect.options).find(
+                    opt => opt.value === 'Classic'
+                );
+                
+                if (!existingOption) {
+                    addOption(musicSelect, 'Classic', 'Классика');
+                    displaySelectedOption(musicSelect);
+                } else {
+                    alert('Опция Classic уже существует!');
+                }
+            });
+            
+            // Обработчик кнопки выбора Classic
+            document.getElementById('selectClassic').addEventListener('click', function() {
+                const classicOption = Array.from(musicSelect.options).find(
+                    opt => opt.value === 'Classic'
+                );
+                
+                if (classicOption) {
+                    classicOption.selected = true;
+                    displaySelectedOption(musicSelect);
+                } else {
+                    alert('Сначала добавьте опцию Classic!');
+                }
+            });
+            
+            // Инициализация плейсхолдеров
+            const inputsWithPlaceholder = document.querySelectorAll('input[data-placeholder]');
+            inputsWithPlaceholder.forEach(initPlaceholder);
+        }
+
+        // Запускаем инициализацию после загрузки DOM
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

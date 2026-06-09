@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактируемый блок с сохранением в localStorage</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        #view {
+            border: 1px dashed #888;
+            padding: 15px;
+            min-height: 80px;
+            background: #fafafa;
+        }
+        #editor {
+            width: 100%;
+            min-height: 150px;
+            font-family: monospace;
+            padding: 10px;
+            box-sizing: border-box;
+            display: none; /* по умолчанию скрыт */
+        }
+        .hint {
+            font-size: 13px;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Редактируемый блок</h2>
+
+    <!-- Режим просмотра -->
+    <div id="view"></div>
+
+    <!-- Режим редактирования -->
+    <textarea id="editor"></textarea>
+
+    <p class="hint">
+        <b>Ctrl+E</b> — редактировать,
+        <b>Ctrl+S</b> — сохранить,
+        <b>Esc</b> — отменить.
+    </p>
+
+    <script>	
+	'use strict';
+        /** @type {string} Ключ в localStorage для хранения содержимого блока. */
+        const STORAGE_KEY = 'editableContent';
+
+        /** @type {HTMLDivElement} Элемент, отображающий содержимое в виде HTML. */
+        const view = document.getElementById('view');
+
+        /** @type {HTMLTextAreaElement} Поле для редактирования HTML‑кода. */
+        const editor = document.getElementById('editor');
+
+        /** @type {string} Содержимое <div> на момент входа в режим редактирования (для отмены). */
+        let snapshot = '';
+
+        /**
+         * Загружает сохранённое содержимое из localStorage и вставляет его в <div>.
+         * Если сохранённых данных нет — устанавливает стартовое значение.
+         * @returns {void}
+         */
+        function loadFromStorage() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            view.innerHTML = (saved !== null)
+                ? saved
+                : '<p>Здесь можно писать что угодно. Нажмите <b>Ctrl+E</b>, чтобы редактировать HTML.</p>';
+        }
+
+        /**
+         * Сохраняет текущий innerHTML элемента <div> в localStorage.
+         * @returns {void}
+         */
+        function saveToStorage() {
+            localStorage.setItem(STORAGE_KEY, view.innerHTML);
+        }
+
+        /**
+         * Переключает интерфейс в режим редактирования:
+         * запоминает текущее состояние <div>, переносит его в <textarea>
+         * и показывает <textarea>, скрывая <div>.
+         * @returns {void}
+         */
+        function enterEditMode() {
+            snapshot = view.innerHTML;          // сохраняем снимок для возможной отмены
+            editor.value = snapshot;            // показываем HTML как текст
+            view.style.display = 'none';
+            editor.style.display = 'block';
+            editor.focus();
+        }
+
+        /**
+         * Сохраняет изменения: берёт содержимое <textarea> как HTML,
+         * вставляет его в <div>, записывает в localStorage и выходит из режима редактирования.
+         * @returns {void}
+         */
+        function commitChanges() {
+            view.innerHTML = editor.value;      // применяем изменения как HTML
+            saveToStorage();                    // фиксируем в localStorage
+            exitEditMode();
+        }
+
+        /**
+         * Отменяет редактирование: возвращает <div> к состоянию снимка,
+         * не сохраняя изменения и не трогая localStorage.
+         * @returns {void}
+         */
+        function discardChanges() {
+            view.innerHTML = snapshot;          // возвращаем исходное состояние
+            exitEditMode();
+        }
+
+        /**
+         * Скрывает <textarea> и показывает <div>, завершая режим редактирования.
+         * @returns {void}
+         */
+        function exitEditMode() {
+            editor.style.display = 'none';
+            view.style.display = 'block';
+            snapshot = '';
+        }
+
+        /**
+         * Обработчик нажатий клавиш.
+         * Перехватывает Ctrl+E, Ctrl+S и Esc, предотвращая стандартное поведение браузера.
+         * @param {KeyboardEvent} event - Объект события клавиатуры.
+         * @returns {void}
+         */
+        function onKeydown(event) {
+            // Ctrl+E — начать редактирование
+            if (event.ctrlKey && event.code === 'KeyE') {
+                event.preventDefault();
+                enterEditMode();
+                return;
+            }
+
+            // Ctrl+S — сохранить изменения
+            if (event.ctrlKey && event.code === 'KeyS') {
+                event.preventDefault();
+                if (editor.style.display === 'block') {
+                    commitChanges();
+                }
+                return;
+            }
+
+            // Esc — отменить редактирование
+            if (event.code === 'Escape') {
+                event.preventDefault();
+                if (editor.style.display === 'block') {
+                    discardChanges();
+                }
+                return;
+            }
+        }
+
+        // Инициализация: загружаем данные и вешаем обработчик.
+        loadFromStorage();
+        document.addEventListener('keydown', onKeydown);
+    </script>
+</body>
+</html>
