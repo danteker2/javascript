@@ -47,7 +47,7 @@
 	<div id="messages-container">
 	    <div class="pane">
 	      <h3>Лошадь</h3>
-	      <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошади, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
+	      <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошасти, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
 	      <button class="remove-button">[x]</button>
 	    </div>
 	    <div class="pane">
@@ -66,14 +66,21 @@
 
 	<script>
 		/**
-		 * Скрывает родительский элемент сообщения при клике на кнопку
+		 * Переключает видимость родительского элемента сообщения и текст кнопки
 		 * @param {Event} event - Событие клика
 		 * @returns {void}
 		 */
 		function removeMessage(event) {
 			const pane = event.target.closest('.pane');
 			if (pane) {
-				pane.style.display = 'none';
+				const button = event.target.closest('.remove-button');
+				if (pane.style.display === 'none') {
+					pane.style.display = '';
+					button.textContent = '[x]';
+				} else {
+					pane.style.display = 'none';
+					button.textContent = '[+]';
+				}
 			}
 		}
 
