@@ -13,15 +13,13 @@
 		// ЗАДАНИЕ 1: Класс Book с конструктором и методом show
 		// ============================================
 
-		/*
-		 * Класс Book представляет книгу с названием, годом издания и ценой
-		 */
+		// Класс Book представляет книгу с названием, годом издания и ценой
 		class Book {
 		  /*
-		   * Создает экземпляр книги
-		   * @param {string} title - Название книги
-		   * @param {number} pubYear - Год издания книги
-		   * @param {number} price - Цена книги
+		   Создает экземпляр книги
+		   @param {string} title - Название книги
+		   @param {number} pubYear - Год издания книги
+		   @param {number} price - Цена книги
 		   */
 		  constructor(title, pubYear, price) {
 			this.title = title;
@@ -29,9 +27,7 @@
 			this.price = price;
 		  }
 
-		  /*
-		   * Выводит в консоль название и цену книги
-		   */
+		  //  Выводит в консоль название и цену книги
 		  show() {
 			console.log(`Книга: "${this.title}", Цена: ${this.price}`);
 		  }
@@ -45,15 +41,13 @@
 		// ЗАДАНИЕ 2: Геттеры и сеттеры с проверками
 		// ============================================
 
-		/*
-		 * Класс Book с геттерами и сеттерами
-		 */
+		// Класс Book с геттерами и сеттерами
 		class BookWithAccessors {
 		  /*
-		   * Создает экземпляр книги
-		   * @param {string} title - Название книги
-		   * @param {number} pubYear - Год издания книги
-		   * @param {number} price - Цена книги
+		   Создает экземпляр книги
+		   @param {string} title - Название книги
+		   @param {number} pubYear - Год издания книги
+		   @param {number} price - Цена книги
 		   */
 		  constructor(title, pubYear, price) {
 			this.title = title;
@@ -62,17 +56,17 @@
 		  }
 
 		  /*
-		   * Геттер для свойства title
-		   * @returns {string} Название книги
+		   Геттер для свойства title
+		   @returns {string} Название книги
 		   */
 		  get title() {
 			return this._title;
 		  }
 
 		  /*
-		   * Сеттер для свойства title с проверкой
-		   * @param {string} value - Новое название книги
-		   * @throws {Error} Если название пустое
+		   Сеттер для свойства title с проверкой
+		   @param {string} value - Новое название книги
+		   @throws {Error} Если название пустое
 		   */
 		  set title(value) {
 			if (!value || value.trim() === '') {
@@ -82,17 +76,17 @@
 		  }
 
 		  /*
-		   * Геттер для свойства pubYear
-		   * @returns {number} Год издания книги
+		   Геттер для свойства pubYear
+		   @returns {number} Год издания книги
 		   */
 		  get pubYear() {
 			return this._pubYear;
 		  }
 
 		  /*
-		   * Сеттер для свойства pubYear с проверкой
-		   * @param {number} value - Новый год издания
-		   * @throws {Error} Если год не является положительным числом
+		   Сеттер для свойства pubYear с проверкой
+		   @param {number} value - Новый год издания
+		   @throws {Error} Если год не является положительным числом
 		   */
 		  set pubYear(value) {
 			if (typeof value !== 'number' || value <= 0 || !Number.isInteger(value)) {
@@ -102,17 +96,17 @@
 		  }
 
 		  /*
-		   * Геттер для свойства price
-		   * @returns {number} Цена книги
+		   Геттер для свойства price
+		   @returns {number} Цена книги
 		   */
 		  get price() {
 			return this.#price;
 		  }
 
 		  /*
-		   * Сеттер для свойства price с проверкой
-		   * @param {number} value - Новая цена
-		   * @throws {Error} Если цена не является положительным числом
+		   Сеттер для свойства price с проверкой
+		   @param {number} value - Новая цена
+		   @throws {Error} Если цена не является положительным числом
 		   */
 		  set price(value) {
 			if (typeof value !== 'number' || value <= 0) {
@@ -151,22 +145,17 @@
 		  console.log('Error:', error.message);
 		}
 
-		// Попытка доступа к приватному полю
-		// console.log(book2.#price); // Вызовет ошибку
-
 		// ============================================
 		// ЗАДАНИЕ 3: Статический метод compare для сортировки
 		// ============================================
 
-		/*
-		 * Класс Book со статическим методом compare
-		 */
+		// Класс Book со статическим методом compare
 		class BookWithCompare {
 		  /*
-		   * Создает экземпляр книги
-		   * @param {string} title - Название книги
-		   * @param {number} pubYear - Год издания книги
-		   * @param {number} price - Цена книги
+		   Создает экземпляр книги
+		   @param {string} title - Название книги
+		   @param {number} pubYear - Год издания книги
+		   @param {number} price - Цена книги
 		   */
 		  constructor(title, pubYear, price) {
 			this.title = title;
@@ -175,18 +164,16 @@
 		  }
 
 		  /*
-		   * Статический метод для сравнения книг по году издания
-		   * @param {BookWithCompare} a - Первая книга
-		   * @param {BookWithCompare} b - Вторая книга
-		   * @returns {number} Отрицательное, если a раньше b; положительное, если a позже b; 0 если равны
+		   Статический метод для сравнения книг по году издания
+		   @param {BookWithCompare} a - Первая книга
+		   @param {BookWithCompare} b - Вторая книга
+		   @returns {number} Отрицательное, если a раньше b; положительное, если a позже b; 0 если равны
 		   */
 		  static compare(a, b) {
 			return a.pubYear - b.pubYear;
 		  }
 
-		  /*
-		   * Выводит информацию о книге
-		   */
+		  // Выводит информацию о книге
 		  show() {
 			console.log(`"${this.title}" (${this.pubYear}) - ${this.price} руб.`);
 		  }
@@ -213,9 +200,9 @@
 		// ============================================
 
 		/*
-		 * Проверяет, пуст ли объект (не имеет собственных свойств, включая символьные)
-		 * @param {Object} obj - Объект для проверки
-		 * @returns {boolean} true, если объект не имеет свойств; false в противном случае
+		 Проверяет, пуст ли объект (не имеет собственных свойств, включая символьные)
+		 @param {Object} obj - Объект для проверки
+		 @returns {boolean} true, если объект не имеет свойств; false в противном случае
 		 */
 		function isEmpty(obj) {
 		  // Получаем все собственные свойства, включая символьные
@@ -234,16 +221,14 @@
 		// ЗАДАНИЕ 5: Методы addClass и removeClass
 		// ============================================
 
-		/*
-		 * Объект с className и методами для работы с классами
-		 */
+		// Объект с className и методами для работы с классами
 		let obj = {
 		  className: 'open menu',
 
 		  /*
-		   * Добавляет класс в список, если его там еще нет
-		   * @param {string} cls - Класс для добавления
-		   * @returns {Object} Сам объект для цепочки вызовов
+		   Добавляет класс в список, если его там еще нет
+		   @param {string} cls - Класс для добавления
+		   @returns {Object} Сам объект для цепочки вызовов
 		   */
 		  addClass(cls) {
 			if (!cls || cls.trim() === '') return this;
@@ -259,9 +244,9 @@
 		  },
 
 		  /*
-		   * Удаляет класс из списка, если он есть
-		   * @param {string} cls - Класс для удаления
-		   * @returns {Object} Сам объект для цепочки вызовов
+		   Удаляет класс из списка, если он есть
+		   @param {string} cls - Класс для удаления
+		   @returns {Object} Сам объект для цепочки вызовов
 		   */
 		  removeClass(cls) {
 			if (!cls || cls.trim() === '') return this;
@@ -291,9 +276,7 @@
 		// ЗАДАНИЕ 6: Работа с JSON
 		// ============================================
 
-		/*
-		 * Объект для преобразования в JSON
-		 */
+		// Объект для преобразования в JSON
 		let objForJSON = {
 		  name: 'John',
 		  age: 30,
@@ -329,8 +312,8 @@
 		// ============================================
 
 		/*
-		 * Возвращает количество секунд, прошедших с начала текущего дня
-		 * @returns {number} Количество секунд с начала дня
+		 Возвращает количество секунд, прошедших с начала текущего дня
+		 @returns {number} Количество секунд с начала дня
 		 */
 		function getSecondsToday() {
 		  const now = new Date();
@@ -351,9 +334,9 @@
 		// ============================================
 
 		/*
-		 * Форматирует дату в строку формата "дд.мм.гг"
-		 * @param {Date} date - Объект даты для форматирования
-		 * @returns {string} Дата в формате "дд.мм.гг"
+		 Форматирует дату в строку формата "дд.мм.гг"
+		 @param {Date} date - Объект даты для форматирования
+		 @returns {string} Дата в формате "дд.мм.гг"
 		 */
 		function formatDate(date) {
 		  const day = String(date.getDate()).padStart(2, '0');
