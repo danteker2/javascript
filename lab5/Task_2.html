@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Дерево из объекта</title>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+	'use strict';
+        /**
+         * Рекурсивно создаёт вложенный список ul/li из объекта.
+         * @param {HTMLElement} container - родительский элемент, в который вставляется список.
+         * @param {Object} data - объект, ключи которого становятся элементами li,
+         *                        а значения (объекты) — вложенными списками.
+         */
+        function createTree(container, data) {
+            const ul = document.createElement('ul');
+
+            for (const key in data) {
+                if (!data.hasOwnProperty(key)) continue;
+
+                const li = document.createElement('li');
+                li.textContent = key;
+
+                const children = data[key];
+                // Если у ключа есть вложенные свойства — рекурсивно создаём подсписок
+                if (typeof children === 'object' && Object.keys(children).length > 0) {
+                    createTree(li, children);
+                }
+
+                ul.appendChild(li);
+            }
+
+            container.appendChild(ul);
+        }
+
+        // Пример использования
+        let data = {
+            "Рыбы": {
+                "форель": {},
+                "лосось": {}
+            },
+            "Деревья": {
+                "Огромные": {
+                    "секвойя": {},
+                    "дуб": {}
+                },
+                "Цветковые": {
+                    "яблоня": {},
+                    "магнолия": {}
+                }
+            }
+        };
+
+        let container = document.getElementById('container');
+        createTree(container, data);
+    </script>
+</body>
+</html>

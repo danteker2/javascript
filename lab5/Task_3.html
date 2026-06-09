@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Текст</title>
+</head>
+<body>
+    <button id="toggleBtn">Спрятать текст</button>
+	<div id="text">Текст</div>
+    <script>
+	'use strict';
+        /**
+         * Переключает видимость элемента с id="text" и меняет текст кнопки.
+         * Если текст виден — скрывает его и меняет надпись кнопки на "Показать текст".
+         * Если текст скрыт — показывает его и меняет надпись на "Скрыть текст".
+         * @param {HTMLElement} button - кнопка, по которой происходит переключение.
+         */
+        function toggleText(button) {
+            const textElement = document.getElementById('text');
+
+            if (textElement.style.display === 'none') {
+                textElement.style.display = 'block';
+                button.textContent = 'Спрятать текст';
+            } else {
+                textElement.style.display = 'none';
+                button.textContent = 'Показать текст';
+            }
+        }
+
+        const toggleBtn = document.getElementById('toggleBtn');
+        toggleBtn.addEventListener('click', function () {
+            toggleText(this);
+        });
+    </script>
+</body>
+</html>
