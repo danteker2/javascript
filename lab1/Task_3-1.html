@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ввод числа</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .link-container {
+            margin-top: 40px;
+        }
+        a {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #45a049;
+        }
+        .info {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196F3;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Страница «Ввод числа»</h1>
+    
+    <div class="link-container">
+        <a href="Task_3-2.html" id="numberLink">Получить число</a>
+    </div>
+    
+    <div class="info">
+        <p><strong>Инструкция:</strong></p>
+        <p>Нажмите на ссылку «Получить число».</p>
+        <p>В появившемся окне введите число больше 100.</p>
+        <p>Если вы нажмёте Cancel (ESC), система спросит подтверждение перехода.</p>
+    </div>
+
+    <script>
+        'use strict';
+
+        /**
+         * Функция запрашивает число больше 100
+         * @returns {boolean} true - если число введено, false - если нажат Cancel
+         */
+        function getNumberGreaterThan100() {
+            while (true) {
+                const inputValue = prompt('Введите число больше 100:');
+                
+                // Проверяем, нажал ли пользователь Cancel (ESC)
+                if (inputValue === null) {
+                    return false;
+                }
+                
+                // Преобразуем введённое значение в число
+                const number = Number(inputValue);
+                
+                // Проверяем, является ли введённое значение числом и больше ли оно 100
+                if (number > 100) {
+                    return true;
+                }
+                
+                // Если число <= 100 или не число, цикл продолжится
+                // и prompt появится снова
+            }
+        }
+
+        // Добавляем обработчик клика по ссылке
+        document.getElementById('numberLink').addEventListener('click', function(event) {
+            // Предотвращаем стандартный переход по ссылке
+            event.preventDefault();
+            
+            // Сохраняем ссылку для возможного перехода
+            const linkHref = this.href;
+            
+            // Вызываем функцию получения числа
+            const result = getNumberGreaterThan100();
+            
+            if (result === true) {
+                // Число введено успешно - переходим по ссылке
+                window.location.href = linkHref;
+            } else {
+                // Нажат Cancel - запрашиваем подтверждение
+                const isConfirmed = confirm('Вы отменили ввод числа. Всё равно перейти на главную страницу?');
+                
+                if (isConfirmed) {
+                    // Пользователь подтвердил - переходим
+                    window.location.href = linkHref;
+                }
+                // Если не подтвердил - остаёмся на текущей странице
+            }
+        });
+    </script>
+</body>
+</html>

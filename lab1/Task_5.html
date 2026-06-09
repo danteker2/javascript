@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Таблица</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Таблица</h1>
+    
+    <form id="tableForm">
+        <div class="form-group">
+            <label for="rows">Количество строк:</label>
+            <input type="number" id="rows" name="rows" min="1" required>
+        </div>
+        
+        <button type="submit">Рисовать</button>
+    </form>
+    
+    <div class="info">
+        Откройте консоль браузера (F12), чтобы увидеть таблицу
+    </div>
+
+    <script>
+        'use strict';
+
+        document.getElementById('tableForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const rowCount = parseInt(document.getElementById('rows').value);
+            
+            // Последовательность: 3 собаки, 2 кота (dog dog dog cat cat)
+            // В каждой строке 6 животных
+            const animals = ['dog', 'dog', 'dog', 'cat', 'cat'];
+            const animalsPerRow = 6;
+            
+            for (let row = 0; row < rowCount; row++) {
+                let rowAnimals = [];
+                
+                for (let col = 0; col < animalsPerRow; col++) {
+                    // Используем остаток от деления для циклического перебора
+                    const index = (row * animalsPerRow + col) % animals.length;
+                    rowAnimals.push(animals[index]);
+                }
+                
+                // Выводим строку с разделителем - символом табуляции
+                console.log(rowAnimals.join('\t'));
+            }
+        });
+    </script>
+</body>
+</html>
