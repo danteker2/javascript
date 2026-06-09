@@ -1,10 +1,10 @@
 'use strict';
 
-/*
- Возвращает x в степени n
- @param {number} x - основание
- @param {number} n - показатель степени (целое число)
- @returns {number} x в степени n
+/**
+ * Возвращает x в степени n
+ * @param {number} x - основание
+ * @param {number} n - показатель степени (целое число)
+ * @returns {number} x в степени n
  */
 function pow(x, n) {
   return Math.pow(x, n);
