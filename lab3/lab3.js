@@ -1,9 +1,9 @@
 'use strict';
 
 /*
- * Возвращает дробную часть числа num
- * @param {number} num - число
- * @returns {number} дробная часть числа
+ Возвращает дробную часть числа num
+ @param {number} num - число
+ @returns {number} дробная часть числа
  */
 function getDecimal(num) {
   const decimal = num - Math.floor(num);
@@ -12,10 +12,10 @@ function getDecimal(num) {
 }
 
 /*
- * Делит числа с остатком (деление с остатком по правилам математики)
- * @param {number} divident - делимое
- * @param {number} divisor - делитель
- * @returns {Array} массив вида [частное, остаток]
+ Делит числа с остатком (деление с остатком по правилам математики)
+ @param {number} divident - делимое
+ @param {number} divisor - делитель
+ @returns {Array} массив вида [частное, остаток]
  */
 function divmod(divident, divisor) {
   if (divisor === 0) {
@@ -27,9 +27,9 @@ function divmod(divident, divisor) {
 }
 
 /*
- * Возвращает строку с заглавным первым символом
- * @param {string} str - исходная строка
- * @returns {string} строка с заглавной первой буквой
+ Возвращает строку с заглавным первым символом
+ @param {string} str - исходная строка
+ @returns {string} строка с заглавной первой буквой
  */
 function ucFirst(str) {
   if (!str) return '';
@@ -37,9 +37,9 @@ function ucFirst(str) {
 }
 
 /*
- * Нормализует URL, добавляя https:// в начало
- * @param {string} url - адрес сайта
- * @returns {string} нормализованный URL
+ Нормализует URL, добавляя https:// в начало
+ @param {string} url - адрес сайта
+ @returns {string} нормализованный URL
  */
 function normalizeUrl(url) {
   if (url.startsWith('http://')) {
@@ -52,9 +52,9 @@ function normalizeUrl(url) {
 }
 
 /*
- * Проверяет строку на наличие спама ('viagra' или 'xxx')
- * @param {string} str - проверяемая строка
- * @returns {boolean} true, если строка содержит спам
+ Проверяет строку на наличие спама ('viagra' или 'xxx')
+ @param {string} str - проверяемая строка
+ @returns {boolean} true, если строка содержит спам
  */
 function checkSpam(str) {
   const lowerStr = str.toLowerCase();
@@ -62,10 +62,10 @@ function checkSpam(str) {
 }
 
 /*
- * Усекает строку до заданной длины, добавляя многоточие
- * @param {string} str - исходная строка
- * @param {number} maxlength - максимальная длина
- * @returns {string} усеченная строка
+ Усекает строку до заданной длины, добавляя многоточие
+ @param {string} str - исходная строка
+ @param {number} maxlength - максимальная длина
+ @returns {string} усеченная строка
  */
 function truncate(str, maxlength) {
   if (str.length <= maxlength) {
@@ -75,9 +75,9 @@ function truncate(str, maxlength) {
 }
 
 /*
- * Преобразует строку вида 'var-test-text' в 'varTestText'
- * @param {string} str - исходная строка
- * @returns {string} строка в camelCase
+ Преобразует строку вида 'var-test-text' в 'varTestText'
+ @param {string} str - исходная строка
+ @returns {string} строка в camelCase
  */
 function camelize(str) {
   const parts = str.split('-');
@@ -85,9 +85,9 @@ function camelize(str) {
 }
 
 /*
- * Возвращает массив чисел Фибоначчи до n-го (не включая)
- * @param {number} n - количество чисел Фибоначчи
- * @returns {Array<bigint>} массив чисел Фибоначчи
+ Возвращает массив чисел Фибоначчи до n-го (не включая)
+ @param {number} n - количество чисел Фибоначчи
+ @returns {Array<bigint>} массив чисел Фибоначчи
  */
 function fibs(n) {
   const result = [];
@@ -98,18 +98,18 @@ function fibs(n) {
 }
 
 /*
- * Возвращает массив, отсортированный по убыванию
- * @param {Array<number>} arr - исходный массив
- * @returns {Array<number>} новый отсортированный массив
+ Возвращает массив, отсортированный по убыванию
+ @param {Array<number>} arr - исходный массив
+ @returns {Array<number>} новый отсортированный массив
  */
 function arrReverseSorted(arr) {
   return [...arr].sort((a, b) => b - a);
 }
 
 /*
- * Возвращает массив уникальных значений
- * @param {Array} arr - исходный массив
- * @returns {Array} массив уникальных значений
+ Возвращает массив уникальных значений
+ @param {Array} arr - исходный массив
+ @returns {Array} массив уникальных значений
  */
 function unique(arr) {
   return [...new Set(arr)];
@@ -130,9 +130,9 @@ export {
 };
 
 /*
- * Вспомогательная функция для вычисления n-го числа Фибоначчи
- * @param {number} n - номер числа Фибоначчи
- * @returns {bigint} n-е число Фибоначчи
+ Вспомогательная функция для вычисления n-го числа Фибоначчи
+ @param {number} n - номер числа Фибоначчи
+ @returns {bigint} n-е число Фибоначчи
  */
 function fib(n) {
   if (n === 0) return 0n;
