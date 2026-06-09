@@ -107,4 +107,4 @@ function addBlackSpot(obj) {
 }
 
 // Экспорт для следующей лабораторной
-//export { fib };
+// export { pow, sumTo, isLeapYear, factorial, fib, compare, sum, addBlackSpot };
